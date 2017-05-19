@@ -43,6 +43,9 @@
     "webpack-hot-middleware": "^2.10.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
+    "detect-port": "^1.1.2",
+    "moment": "^2.18.1",
     "react": "^0.14.6",
     "react-dom": "^0.14.6"
   }

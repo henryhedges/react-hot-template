@@ -2,24 +2,41 @@ var path = require('path');
 var webpack = require('webpack');
 var express = require('express');
 var config = require('./webpack.config');
+var detect = require('detect-port');
 
 var app = express();
 var compiler = webpack(config);
+var DEFAULT_PORT = 3000;
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  publicPath: config.output.publicPath
-}));
+// app.use(require('webpack-dev-middleware')(compiler, {
+//   publicPath: config.output.publicPath
+// }));
 
-app.use(require('webpack-hot-middleware')(compiler));
+// app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(3000, function(err) {
-  if (err) {
-    return console.error(err);
-  }
+// Checks to see if port is open, then checks to find the next open port
+function checkPort(defaultPort){
 
-  console.log('Listening at http://localhost:3000/');
-});
+    console.log('Checking port ', defaultPort)
+    detect(defaultPort).then(function(port){
+        if ( port === defaultPort ){
+            app.listen(defaultPort, function(err) {
+              if (err) {
+                return console.error('Error Listening on port',err);
+              }
+              console.log('Listening at http://localhost:' + defaultPort + '/');
+            });
+        } else {
+            DEFAULT_PORT = defaultPort + 1;
+            console.log('Port in use, checking next port')
+            checkPort(DEFAULT_PORT)
+        }
+    })
+}
+
+checkPort(DEFAULT_PORT)
+
