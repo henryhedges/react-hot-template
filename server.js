@@ -8,17 +8,17 @@ var app = express();
 var compiler = webpack(config);
 var DEFAULT_PORT = 3000;
 
-// app.use(require('webpack-dev-middleware')(compiler, {
-//   publicPath: config.output.publicPath
-// }));
+app.use(require('webpack-dev-middleware')(compiler, {
+  publicPath: config.output.publicPath
+}));
 
-// app.use(require('webpack-hot-middleware')(compiler));
+app.use(require('webpack-hot-middleware')(compiler));
 
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Checks to see if port is open, then checks to find the next open port
+// Checks to see if port is open. If not, checks to find the next open port
 function checkPort(defaultPort){
 
     console.log('Checking port ', defaultPort)
@@ -38,5 +38,6 @@ function checkPort(defaultPort){
     })
 }
 
+// Start listening on DEFAULT_PORT
 checkPort(DEFAULT_PORT)
 
